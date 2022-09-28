@@ -11,8 +11,8 @@ const app = express();
 app.use(express.static(staticPath));
 app.use(fileUpload());
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(staticPath, "index.html"));
+app.get("/", (request, response) => {
+  response.sendFile(path.join(staticPath, "index.html"));
 });
 
 app.post('/pdf', (request, response) => {
