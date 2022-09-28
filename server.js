@@ -1,14 +1,33 @@
 const express = require("express");
-const cors = require("cors");
-const fastFile = require("fast-file-converter").default;
+const fileUpload = require("express-fileupload");
+const pdfParse = require("pdf-parse");
+const path = require("path");
+
+// Declare static path
+let staticPath = path.join(__dirname, "public")
+
 const app = express();
 
-app.listen(3000);
-app.use(express.json());
-app.use(cors({
-  origin: "*"
-}));
+app.use(express.static(staticPath));
+
+app.use(fileUpload());
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(staticPath, "index.html"));
+});
 
 app.post('/pdf', (request, response) => {
-  console.log(request);
+  pdfParse(request.files.pdfFile)
+    .then((result) => {
+      response.send(result.text);
+    });
 });
+
+app.post('/txt', (request, response) => {
+  let logFile = request.files.textFile;
+  let buffer = logFile.data;
+  let processedText = buffer.toString('utf8');
+  response.send(processedText);
+});
+
+app.listen(3000);

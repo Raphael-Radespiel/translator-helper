@@ -5,6 +5,7 @@ let translateFromSelect = document.querySelector("#lang-from");
 let translateToSelect = document.querySelector("#lang-to");
 let createProjectButton = document.querySelector("#create-button");
 
+// MAKE THIS CREATE PROJECT BUTTON FUNCTION ASYNC SO THAT WE CAN WAIT UNTIL ORIGINAL TEXT HAS BEEN ASSIGNED
 function initButtonEvents(){
   translateSelectDiv.style.display = "none";
 
@@ -18,6 +19,8 @@ function initButtonEvents(){
   });
 
   createProjectButton.addEventListener("click", () => {
+    let originalText;
+
     // Check if there is a file uploaded
     if(inputFile.files[0] === undefined){
       return;
@@ -25,34 +28,40 @@ function initButtonEvents(){
 
     // Check if pdf
     if(inputFile.files[0].name.slice(-4) === ".pdf"){
-      const data = inputFile.files[0];
+      const data = new FormData(); 
+      data.append('pdfFile', inputFile.files[0]);
+        
       const options = {
         method: "POST",
-        header: {
-          'Content-Type': 'application/pdf'
-        }, 
-        body: data
+        body: data 
       }
 
-      fetch('http://localhost:3000/pdf', options);
-
-      console.log(inputFile.files[0].name);
-      console.log('pdf');
+      fetch('http://localhost:3000/pdf', options)
+        .then((response) => {
+          return response.text();
+        })
+        .then((extractedText) => {
+          originalText = extractedText;
+        });
     }
 
     // Check if txt
     if(inputFile.files[0].name.slice(-4) === ".txt"){
-      const data = inputFile.files[0];
+      const data = new FormData(); 
+      data.append('textFile', inputFile.files[0]);
+
       const options = {
         method: "POST",
-        header: {
-          'Content-Type': 'text/plain'
-        }, 
         body: data
       }
-      console.log(inputFile.files[0].name);
-      console.log('txt');
-      console.log(inputFile);
+
+      fetch('http://localhost:3000/txt', options)
+        .then((response) => {
+          return response.text();
+        })
+        .then((extractedText) => {
+          originalText = extractedText;
+        })
     }
 
     // Check if text will be translated automatically 
