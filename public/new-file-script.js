@@ -18,7 +18,7 @@ function initButtonEvents(){
     }
   });
 
-  createProjectButton.addEventListener("click", () => {
+  createProjectButton.addEventListener("click", async () => {
     let originalText;
 
     // Check if there is a file uploaded
@@ -36,13 +36,9 @@ function initButtonEvents(){
         body: data 
       }
 
-      fetch('http://localhost:3000/pdf', options)
-        .then((response) => {
-          return response.text();
-        })
-        .then((extractedText) => {
-          originalText = extractedText;
-        });
+      let response = await fetch('http://localhost:3000/pdf', options)
+      let extractedText = await response.text();
+      originalText = extractedText;
     }
 
     // Check if txt
@@ -55,14 +51,12 @@ function initButtonEvents(){
         body: data
       }
 
-      fetch('http://localhost:3000/txt', options)
-        .then((response) => {
-          return response.text();
-        })
-        .then((extractedText) => {
-          originalText = extractedText;
-        })
+      let response = await fetch('http://localhost:3000/txt', options)
+      let extractedText = await response.text();
+      originalText = extractedText;
     }
+
+    console.log(originalText);
 
     // Check if text will be translated automatically 
     if(translateCheckbox.checked){

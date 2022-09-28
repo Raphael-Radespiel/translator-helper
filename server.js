@@ -9,7 +9,6 @@ let staticPath = path.join(__dirname, "public")
 const app = express();
 
 app.use(express.static(staticPath));
-
 app.use(fileUpload());
 
 app.get("/", (req, res) => {
