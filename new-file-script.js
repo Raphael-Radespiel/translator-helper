@@ -23,24 +23,39 @@ function initButtonEvents(){
       return;
     }
 
+    // Check if pdf
     if(inputFile.files[0].name.slice(-4) === ".pdf"){
-      const formData = new FormData();
-      formData.append("pdfFile", inputFile.files[0]);
-      
+      const data = inputFile.files[0];
+      const options = {
+        method: "POST",
+        header: {
+          'Content-Type': 'application/pdf'
+        }, 
+        body: data
+      }
+
+      fetch('http://localhost:3000/pdf', options);
+
       console.log(inputFile.files[0].name);
       console.log('pdf');
     }
 
+    // Check if txt
     if(inputFile.files[0].name.slice(-4) === ".txt"){
+      const data = inputFile.files[0];
+      const options = {
+        method: "POST",
+        header: {
+          'Content-Type': 'text/plain'
+        }, 
+        body: data
+      }
       console.log(inputFile.files[0].name);
       console.log('txt');
+      console.log(inputFile);
     }
-    // CHECK FOR FILE TYPE
-    //
-    // CONVERT PDF OR TXT TO TEXT 
-    //
-    // IF translate is checked, use translation api to display the second text
-    //
+
+    // Check if text will be translated automatically 
     if(translateCheckbox.checked){
       console.log(translateFromSelect.value + " " + translateToSelect.value);
     }
