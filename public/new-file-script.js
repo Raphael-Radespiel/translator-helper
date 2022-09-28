@@ -42,12 +42,25 @@ function initButtonEvents(){
     }
 
     // ADD TEXTS TO LOCALSTORAGE
-    //
-    // MAKE NEW TEXT THE CURRENT ONE TO BE DISPLAYED IN TEXT EDITING.html
-    //
-    // GET REQUEST TO TEXT EDITING.html 
+    let textName = inputFile.files[0].name.slice(0, -4); // remove .txt or .pdf from title
+    let parsedTextName = '';
 
-    console.log(originalText);
+    for(let char of textName){ 
+      if(char === "_" || char === "-"){
+        parsedTextName = parsedTextName.concat(' ');
+      }
+      else{
+        parsedTextName = parsedTextName.concat(char);
+      }
+    }
+
+    localStorage.setItem(parsedTextName, JSON.stringify({"original": originalText, "translation": translatedText}));
+
+    // MAKE NEW TEXT THE CURRENT ONE TO BE DISPLAYED IN TEXT EDITING.html
+    sessionStorage.setItem("currentText", parsedTextName);
+
+    // Go to new page
+    window.location = "/edit-text.html";
   });
 
 }
